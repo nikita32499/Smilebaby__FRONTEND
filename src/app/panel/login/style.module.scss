@@ -1,51 +1,58 @@
-@import '@src/scss/mixins.scss';
+@import '@/sass/mixins.scss';
 
 .login {
-	display: flex;
-	min-height: 100vh;
+    display: flex;
+    min-height: 100vh;
 }
 
 .login_box {
-	@include white_box;
-	display: flex;
-	flex-direction: column;
-	width: max-content;
-	margin: auto;
-	padding: 14px 26px;
-	max-width: 430px;
-	width: 100%;
-	> h2 {
-		text-align: center;
-		padding: 20px;
-		font-size: 24px;
-		font-weight: 400;
-	}
-	> img {
-		width: 50px;
-		height: 50px;
-		background-size: contain;
-		margin: auto;
-	}
+    @include panel_box;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    margin: auto;
+    padding: 14px 26px;
+    max-width: 430px;
+    width: 100%;
+    > h2 {
+        text-align: center;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: 400;
+    }
+    > img {
+        width: 50px;
+        height: 50px;
+        background-size: contain;
+        margin: auto;
+    }
 }
 
 .login__inputBox {
-	@include input_box;
-	margin-top: 20px;
-	> input {
-		width: 100%;
-	}
+    @include panel__input;
+    margin-top: 20px;
+    padding: 10px;
+    > input {
+        width: 100%;
+    }
+    > p {
+        color: #666;
+    }
 }
 
 .login__buttonSigin {
-	@include button_panel;
-	font-size: 16px;
-	line-height: 24px;
-	padding: 17px 0;
+    @include panel__input;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 17px 0;
+    background-color: #000;
+    color: #fff;
 }
 
 .login__error {
-	color: #f00;
-	margin-bottom: 20px;
-	display: block;
-	opacity: 0;
+    color: #f00;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0;
+    margin-top: 20px;
 }

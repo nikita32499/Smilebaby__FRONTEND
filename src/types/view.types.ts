@@ -1,1 +1,1 @@
-export * from 'baby_back/src/_types/view.types';
+export * from '../../../Smilebaby__BACKEND/src/_types/view.types';

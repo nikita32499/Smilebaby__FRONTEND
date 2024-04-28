@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { isJwtUserData } from '@src/types/user'
+import { isJwtUserData } from '@/types/user.types';
 
 export function getUserData() {
-	if (typeof window === 'undefined') return
-	const userData = JSON.parse(localStorage.getItem('userData') ?? '{}')
+    if (typeof window === 'undefined') return;
+    const userData = JSON.parse(localStorage.getItem('userData') ?? '{}');
 
-	if (isJwtUserData(userData)) {
-		return userData
-	}
-	return
+    if (isJwtUserData(userData)) {
+        return userData;
+    }
+    return;
 }

@@ -18,7 +18,7 @@
             }
         ],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
         },
         "removeComments": true
         // "checkJs": true,

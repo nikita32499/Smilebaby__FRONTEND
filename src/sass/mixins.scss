@@ -1,4 +1,14 @@
 @mixin panel__input {
-  border: 10px;
-  box-shadow: 0 0 2px #000;
+    border-radius: 10px;
+    box-shadow: 0 0 2px #000;
+}
+
+@mixin panel_box {
+    border-radius: 10px;
+    box-shadow: 0 2px 7px #0005;
+}
+
+@mixin panel__button--black {
+    background-color: #000;
+    color: #fff;
 }
