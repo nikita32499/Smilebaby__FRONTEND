@@ -1,67 +1,109 @@
-import { useContext, useEffect } from 'react'
-import { Context } from './context'
+import { useContext, useEffect } from 'react';
+import { Context } from './context';
 
-import { IViewUnion } from '@/types/view.types'
-import { DefaultUsersElement } from './Users'
+import { IViewUnion } from '@/types/view.types';
+import { DefaultUsersElement } from './Users';
 
-import { setView } from '@/api/view.api'
-import style from './view.module.scss'
+import { setView } from '@/api/view.api';
+import style from './view.module.scss';
 
 interface IPropsChangeViewElement {
     view: IViewUnion;
 }
 
-
-
-type Value = string | number | boolean | null
-
-
-
-interface IPropAttrValue {
-    attr:{
-        description: string;
-        value: string | object;
-    }
+export interface IViewAttrExtend {
+    description: string;
+    object: Record<string, string>;
 }
 
-interface IPropObject {
-    object:{
-        description: string;
-        value: string | object;
-    }
-}
+type IViewValue = string | number | boolean | null;
 
-interface IPropArray{
-    array:(IPropObject | Value)[]
-}
+type IViewAttr = {
+    description: string;
+    value: IViewValue | IViewObject | IViewArray;
+};
 
+//
 
-function TypesElement({value}:{value:(IPropObject | Value)}){
-    return Array.isArray(value)?<ArrayElement array={value}/>?typeof value==="object"?<ObjectElement object={value}/>:<div>Значение:{value}</div>
-}
+type IViewObject = Record<string, IViewValue | IViewAttr>;
 
+type IViewArray = (IViewObject | IViewValue)[];
 
-function AttrElement({attr}:IPropAttrValue) {
-    return (
+function DefineTypesElement({
+    value,
+    description,
+}: {
+    value: IViewArray | IViewAttr | IViewObject | IViewValue;
+    description?: IViewAttr['description'];
+}) {
+    return Array.isArray(value) ? (
+        <ArrayElement array={value} description={description} />
+    ) : typeof value === 'object' && value != null ? (
+        'description' in value && 'value' in value ? (
+            <AttrElement attr={value as IViewAttr} />
+        ) : (
+            <ObjectElement obj={value} description={description} />
+        )
+    ) : (
         <div>
-            <div>Описание:{attr.description}</div>
-            
+            <strong>Значение:</strong>
+            {value}
         </div>
     );
 }
 
-function ObjectElement({object}: IPropObject) {
-    return <div>p</div>;
+function AttrElement({ attr }: { attr: IViewAttr }) {
+    return (
+        <div>
+            {typeof attr.description === 'string' ? (
+                <div>
+                    <strong>Описание:</strong>
+                    {attr.description}
+                </div>
+            ) : null}
+            <DefineTypesElement value={attr.value} description={attr.description} />
+        </div>
+    );
 }
 
-function ArrayElement({array}: IPropArray) {
-    return <div>
-        {array.map((el,index)=>(
-            <div>
+function ObjectElement({
+    obj,
+    description,
+}: {
+    obj: IViewObject;
+    description?: IViewAttr['description'];
+}) {
+    return (
+        <div>
+            {Object.entries(obj).map(([key, value], index) => (
+                <>
+                    {typeof description === 'object' && key in description.object ? (
+                        <p>
+                            <strong>Описание:</strong>
+                            {description.object[key]}
+                        </p>
+                    ) : null}
+                    <DefineTypesElement value={value} />
+                </>
+            ))}
+        </div>
+    );
+}
 
-            </div>
-        ))}
-    </div>;
+function ArrayElement({
+    array,
+    description,
+}: {
+    array: IViewArray;
+    description?: IViewAttr['description'];
+}) {
+    return (
+        <div>
+            {array.map((el, index) => (
+                <DefineTypesElement value={el} description={description} />
+            ))}
+        </div>
+    );
 }
 
 function ChangeViewElement({ view }: IPropsChangeViewElement) {
@@ -108,7 +150,7 @@ function ChangeViewElement({ view }: IPropsChangeViewElement) {
             </div>
 
             <div className={style.view__params}>
-                {/* <СreateFormFromViewPayload payload={view.payload} /> */}
+                <DefineTypesElement value={view.payload} />
             </div>
         </div>
     );
