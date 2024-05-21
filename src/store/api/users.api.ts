@@ -1,29 +1,37 @@
-import { IItemCreate } from '@/types/item.types';
+import { IJwtUserData, IUser, IUserCreate } from '@/types/user.types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const REACT_BASE_API_URL = `${window.location.origin}/api`;
 
-export const ItemsApi = createApi({
+export const UserApi = createApi({
   reducerPath: 'UsersApi',
   tagTypes: ['Users'],
   baseQuery: fetchBaseQuery({
     baseUrl: REACT_BASE_API_URL + '/users',
   }),
   endpoints: (builder) => ({
-    getAll: builder.query({
+    login: builder.mutation<IJwtUserData, { login: string; password: string }>({
+      query: (data) => ({
+        url: `/login`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
+    getAll: builder.query<Readonly<IUser[]>, void>({
       query: () => `/getAll`,
       providesTags: () => [{ type: 'Users', id: 'LIST' }],
     }),
-    create: builder.mutation({
-      query: (items: IItemCreate) => ({
+    create: builder.mutation<IUser, IUserCreate>({
+      query: (user) => ({
         url: `/create`,
         method: 'POST',
-        body: items,
+        body: user,
       }),
       invalidatesTags: () => [{ type: 'Users', id: 'LIST' }],
     }),
-    remove: builder.mutation({
-      query: ({ id }: { id: number }) => ({
+    delete: builder.mutation<IUser | null, number>({
+      query: (id) => ({
         url: `/delete`,
         method: 'DELETE',
         body: {
@@ -32,8 +40,8 @@ export const ItemsApi = createApi({
       }),
       invalidatesTags: () => [{ type: 'Users', id: 'LIST' }],
     }),
-    update: builder.mutation({
-      query: ({ id, data }: { id: number; data: Partial<IItemCreate> }) => ({
+    update: builder.mutation<IUser | null, { id: number; data: Partial<IUserCreate> }>({
+      query: ({ id, data }) => ({
         url: '/update',
         method: 'POST',
         body: {

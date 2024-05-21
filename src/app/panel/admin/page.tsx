@@ -1,10 +1,9 @@
 'use client';
 
-import { createUser, deleteUsers, getAllUsers } from '@/api/users.api';
-import { useEffect, useState } from 'react';
+// import { deleteUsers } from '@/api/users.api';
+import { useMemo, useState } from 'react';
 
 import { uploadOne } from '@/api/file.api';
-import { getAllViews, setViews } from '@/api/view.api';
 import { ImagePreviewComponent } from '@/components/ImagePreview/ImagePreview';
 import { FileService } from '@/service/file.service';
 import { UserRole } from '@/types/user.types';
@@ -16,16 +15,14 @@ import { DefaultUsersElement } from './ui/DefaultUsersElement/DefaultUsersElemen
 import { DefaultViewElement } from './ui/DefaultViewElement/DefaultViewElement';
 
 import { IPropsImagePreview } from '@/components/ImagePreview/ImagePreview';
-import { IUser } from '@/types/user.types';
-
+import { UserApi } from '@/store/api/users.api';
+import { ViewApi } from '@/store/api/view.api';
 // import { ItemsApi } from '@/store/api/users.api';
 
 type TViewsState = string | number | boolean;
 
 interface IStateAdminPanel {
   data: {
-    users: IUser[];
-    views: IViewUnion[];
     imagePreview?: IPropsImagePreview;
     filesUploadQueue: Map<object, Record<string, () => Promise<void>>>;
     editView?: IViewUnion;
@@ -48,8 +45,6 @@ type TypeSetErrors = Partial<IStateAdminPanel['errors']>;
 export default function AdminPage() {
   const [state, setState] = useState<IStateAdminPanel>({
     data: {
-      users: [],
-      views: [],
       filesUploadQueue: new Map(),
     },
     view: {},
@@ -59,31 +54,15 @@ export default function AdminPage() {
     },
   });
 
-  async function requestListUsers() {
-    const users = await getAllUsers();
-    setState(
-      (prev): IStateAdminPanel => ({
-        ...prev,
-        data: {
-          ...prev.data,
-          users,
-        },
-      }),
-    );
-  }
+  const UserGetAll = UserApi.useGetAllQuery();
+  const [createUser, {}] = UserApi.useCreateMutation();
+  const [UserDelete, {}] = UserApi.useDeleteMutation();
 
-  async function requestListViews() {
-    const views = await getAllViews();
-    setState(
-      (prev): IStateAdminPanel => ({
-        ...prev,
-        data: {
-          ...prev.data,
-          views,
-        },
-      }),
-    );
-  }
+  const ViewGetAll = ViewApi.useGetAllQuery();
+  const [ViewSet] = ViewApi.useSetMutation();
+
+  const users = useMemo(() => JSON.parse(JSON.stringify(UserGetAll.data ?? [])), [UserGetAll.data]);
+  const views = useMemo(() => JSON.parse(JSON.stringify(ViewGetAll.data ?? [])), [ViewGetAll.data]);
 
   function setError(name: keyof TypeSetErrors, error: string | null) {
     const fn = (name: keyof TypeSetErrors, error: string | null) => {
@@ -111,12 +90,7 @@ export default function AdminPage() {
     });
   }
 
-  const userData = getUserData();
-
-  useEffect(() => {
-    requestListViews();
-    requestListUsers();
-  }, []);
+  const userData = getUserData(); //TODO:переделать на redux persist
 
   return (
     <div>
@@ -158,12 +132,18 @@ export default function AdminPage() {
             });
             await Promise.all(promises);
 
-            const newView = await setViews({
+            // const newView = await setViews({
+            //   name: name,
+            //   description: description,
+            //   payload: payload,
+            // });
+            // requestListViews();
+            await ViewSet({
               name: name,
               description: description,
               payload: payload,
             });
-            requestListViews();
+
             setView({ name: 'view_edit', id: false });
           }}
           cancel={() => {
@@ -208,7 +188,7 @@ export default function AdminPage() {
         />
       ) : (
         <DefaultViewElement
-          views={state.data.views}
+          views={views}
           init_edit={(view: IViewUnion) => {
             setState((prev) => {
               prev.data.editView = view;
@@ -232,12 +212,8 @@ export default function AdminPage() {
             }}
             createUser={async (login: string, password: string, role: UserRole) => {
               try {
-                const user = await createUser({
-                  login,
-                  password,
-                  role,
-                });
-                requestListUsers();
+                await createUser({ login, password, role });
+
                 setView({ name: 'users_create', id: false });
               } catch (error) {
                 if (error instanceof Error) {
@@ -248,7 +224,7 @@ export default function AdminPage() {
           />
         ) : (
           <DefaultUsersElement
-            users={state.data.users}
+            users={users}
             init_create={() => {
               setView({ name: 'users_create', id: true });
             }}
@@ -259,8 +235,8 @@ export default function AdminPage() {
               setView({ name: 'users_delete', id: userId });
             }}
             deleteUser={async (userId: number) => {
-              await deleteUsers(userId);
-              await requestListUsers();
+              await UserDelete(userId);
+
               setView({ name: 'users_delete', id: false });
             }}
             isActiveView={(userId: number) => {

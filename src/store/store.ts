@@ -1,16 +1,18 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { ItemsApi } from './api/users.api';
+import { UserApi } from './api/users.api';
+import { ViewApi } from './api/view.api';
 import { itemsSlice } from './reducers/items.slice';
 
 const rootReducers = combineReducers({
   itemsSlice: itemsSlice.reducer,
-  [ItemsApi.reducerPath]: ItemsApi.reducer,
+  [UserApi.reducerPath]: UserApi.reducer,
+  [ViewApi.reducerPath]: ViewApi.reducer,
 });
 
 export const setupStore = () => {
   return configureStore({
     reducer: rootReducers,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([ItemsApi.middleware]),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([UserApi.middleware, ViewApi.middleware]),
   });
 };
 
