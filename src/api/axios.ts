@@ -1,3 +1,4 @@
+'use client';
 import _axios_ from 'axios';
 
 export const appAxios = _axios_.create({

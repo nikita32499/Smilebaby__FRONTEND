@@ -1,0 +1,29 @@
+@import '@/sass/mixins';
+@import '@/sass/variables';
+
+.view {
+  @include panel-box;
+
+  max-width: $panel-width;
+  margin: 20px auto;
+}
+
+.viewList {
+  display: flex;
+
+  > div {
+    @include panel-box;
+
+    width: max-content;
+    padding: 5px;
+    margin: 11px;
+  }
+}
+
+.viewDefaultBoxButton {
+  @include panel-button-black;
+
+  padding: 9px;
+  margin-top: 10px;
+  border-radius: 10px;
+}

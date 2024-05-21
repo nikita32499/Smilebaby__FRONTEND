@@ -32,26 +32,26 @@ export default function Login() {
     }
 
     return (
-        <div className={style.login}>
-            <div className={style.login_box}>
+        <div className={style.Login}>
+            <div className={style.Login__box}>
                 <img height={50} width={50} src="/favicon.ico" alt="" />
                 <h2>{typeof window !== 'undefined' && window.location.hostname}</h2>
-                <div className={style.login__inputBox}>
+                <div className={style.Login__inputBox}>
                     <p>Логин</p>
                     <input type="text" ref={ref.login} content="Login" />
                 </div>
-                <div className={style.login__inputBox}>
+                <div className={style.Login__inputBox}>
                     <p>Пароль</p>
                     <input type="password" ref={ref.password} />
                 </div>
                 <p
-                    className={style.login__error}
+                    className={style.Login__error}
                     style={{ opacity: `${state.errors.message ? '1' : '0'}` }}
                 >
                     {state.errors.message ?? '!'}
                 </p>
                 <button
-                    className={style.login__buttonSigin}
+                    className={style.Login__buttonSigin}
                     onClick={async () => {
                         if (!ref.login.current?.value.length) {
                             dropError();

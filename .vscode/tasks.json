@@ -1,12 +1,13 @@
 {
-  "tasks": [
-    {
-      "type": "typescript",
-      "tsconfig": "tsconfig.json",
-      "option": "watch",
-      "problemMatcher": ["$tsc-watch"],
-      "group": "build",
-      "label": "WATCH tsc: watch - tsconfig.json"
-    }
-  ]
+    "tasks": [
+        {
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "option": "watch",
+            "problemMatcher": ["$tsc-watch"],
+            "group": "build",
+            "label": "WATCH tsc: watch - tsconfig.json",
+            "runOptions": { "runOn": "folderOpen" }
+        }
+    ]
 }
