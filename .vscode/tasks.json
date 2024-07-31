@@ -9,5 +9,16 @@
             "label": "WATCH tsc: watch - tsconfig.json",
             "runOptions": { "runOn": "folderOpen" }
         }
+        // {
+        //   "label": "Check TypeScript",
+        //   "type": "shell",
+        //   "command": "tsc --noEmit",
+        //   "problemMatcher": ["$tsc"],
+        //   "group": {
+        //     "kind": "build",
+        //     "isDefault": true
+        //   },
+        //   "runOptions": { "runOn": "folderOpen" }
+        // }
     ]
 }

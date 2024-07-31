@@ -1,4 +1,5 @@
-import { validateToken } from '@/hook/validateToken';
+import { getUser } from 'entities/user/lib/@x/getUser';
+import { validateToken } from 'entities/user/lib/@x/validateToken';
 import { NextRequest, NextResponse } from 'next/server';
 
 function notFound(request: NextRequest) {
@@ -7,6 +8,7 @@ function notFound(request: NextRequest) {
 
 export async function middleware(request: NextRequest) {
     const token = request.cookies.get('authorization');
+
     const currentPath = request.nextUrl.pathname;
 
     if (currentPath.startsWith('/panel/admin')) {
@@ -14,10 +16,12 @@ export async function middleware(request: NextRequest) {
         const userData = await validateToken(token.value);
         if (!userData) {
             request.cookies.delete('authorization');
-            console.log('DELETE COOKIE {authorization}', token.value);
             return notFound(request);
         }
-        if (userData.role !== 'admin' && userData.role !== 'moderator') {
+        const user = await getUser(userData.userId);
+        if (!user) return notFound(request);
+
+        if (user.role !== 'admin' && user.role !== 'moderator') {
             return notFound(request);
         }
     }
