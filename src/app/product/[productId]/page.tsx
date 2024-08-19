@@ -1,14 +1,13 @@
-'server-only';
 import { nextGetAllEntries } from 'entities/entries';
-import { StorePage } from 'pages/Store';
+import { ProductPage } from 'pages/Product';
 import { mapSECTION } from 'shared/helpers/entries';
 
-export default StorePage;
+export default ProductPage;
 
 export async function generateStaticParams() {
     const sections = mapSECTION(await nextGetAllEntries());
 
     return sections.map((section) => {
-        sectionSlug: section.data.slug;
+        productId: section.data.slug;
     });
 }

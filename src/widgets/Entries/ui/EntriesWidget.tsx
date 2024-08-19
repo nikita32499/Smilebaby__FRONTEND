@@ -1,12 +1,12 @@
-'server-only'
+'server-only';
 
-import { nextGetAllEntries } from 'entities/entries'
-import Link from 'next/link'
-import { mapSECTION } from 'shared/helpers/entries'
-import { IEntriesSection } from 'shared_SmileBaby/dist/types/entries.types'
+import { nextGetAllEntries } from 'entities/entries';
+import Link from 'next/link';
+import { mapSECTION } from 'shared/helpers/entries';
+import { IEntriesSection } from 'shared_SmileBaby/dist/types/entries.types';
 
 export const EntriesWidget = async () => {
-    const entries = await nextGetAllEntries()
+    const entries = await nextGetAllEntries();
 
     return (
         <div className='flex    gap-[24px] items-center justify-center'>
@@ -21,15 +21,15 @@ export const EntriesWidget = async () => {
                 <EntryElement entry={entry} />
             ))}
         </div>
-    )
-}
+    );
+};
 
 interface IPropsEntry {
-    entry: IEntriesSection
+    entry: IEntriesSection;
 }
 
 const EntryElement: FC<IPropsEntry> = (props) => {
-    const { entry } = props
+    const { entry } = props;
 
     return (
         <Link href={`/store/${entry.data.slug}`} className='flex flex-col items-center'>
@@ -39,5 +39,5 @@ const EntryElement: FC<IPropsEntry> = (props) => {
             />
             <span className='mt-[18px]'>{entry.value}</span>
         </Link>
-    )
-}
+    );
+};

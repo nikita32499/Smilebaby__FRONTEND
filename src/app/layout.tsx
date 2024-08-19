@@ -1,10 +1,20 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Rubik } from 'next/font/google';
 import { PropsWithChildren } from 'react';
 import ErrorBoundary from 'shared/ui/ErrorBoundary/ErrorBoundary';
+import { HeaderWidget } from 'widgets/Header';
 import ReduxProvider from './_providers/ReduxProvider';
 import './index.css';
-const inter = Inter({ subsets: ['latin'] });
+
+import cn from 'classnames';
+import { Footer } from 'widgets/Footer';
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
+
+const rubik = Rubik({
+    subsets: ['latin'],
+    display: 'swap',
+    variable: '--font-rubik',
+});
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -15,9 +25,16 @@ export const metadata: Metadata = {
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
     return (
         <html lang='en'>
-            <body className={inter.className}>
+            <body className={cn(inter.className, rubik.className)}>
                 <ReduxProvider>
-                    <ErrorBoundary> {children}</ErrorBoundary>
+                    <ErrorBoundary>
+                        <HeaderWidget />
+
+                        <div className='max-w-[1200px] flex flex-col items-center justify-center m-auto'>
+                            {children}
+                        </div>
+                        <Footer />
+                    </ErrorBoundary>
                 </ReduxProvider>
             </body>
         </html>

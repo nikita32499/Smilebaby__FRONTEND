@@ -25,7 +25,7 @@ export const HeaderWidget: FC = () => {
 
     return (
         <div className='border-b-[1px] border-[#D9D9D9]'>
-            <div className='grid grid-cols-3 items-center max-w-[1200px]  h-[103px] m-auto'>
+            <div className='grid grid-cols-3 items-center max-w-[var(--max-site-width)]  h-[103px] m-auto'>
                 <div className='flex gap-[15px]'>
                     {leftLinks.map((link) => (
                         <LeftButton {...link} />
